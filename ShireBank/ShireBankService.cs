@@ -84,7 +84,8 @@ namespace ShireBank
             if (dbAccount.Balance != 0.0f)
                 return false;
 
-            return _accountRepository.Delete(dbAccount);
+            _accountRepository.Delete(dbAccount);
+            return true;
         }
     }
 }
