@@ -43,41 +43,31 @@ namespace ShireBank.Repos
             _dbContext.SaveChanges();
         }
 
-        public void Update(Account account)
-        {
-            Func<object> operation = () => {
+        public float? Update(Account account)
+        { 
+            var result = HandleConcurrentOperation(() => {
                 _dbContext.Entry(account).State = EntityState.Modified;
-                AddHistoryEntry(account);
-
                 _dbContext.SaveChanges();
-                return null;
-            };
 
-            HandleConcurrentOperation(operation);
+                AddHistoryEntry(account);
+                _dbContext.SaveChanges();
+            });
+
+            return -result.BalanceChange;
         }
 
-        public bool Delete(uint accountId)
+        public void Delete(Account account)
         {
-            Func<bool> operation = () => {
-                var account = _dbContext.Accounts.SingleOrDefault(x => x.Id == accountId);
-                if (account == null) return false;
-
+            HandleConcurrentOperation(() => {
                 _dbContext.Accounts.Remove(account);
-
-                _dbContext.SaveChanges(); 
-                return true;
-            };
-
-            return HandleConcurrentOperation(operation);
+                _dbContext.SaveChanges();
+            });
         }
 
-        private T HandleConcurrentOperation<T>(Func<T> operation)
+        private ConcurentResult HandleConcurrentOperation(Action operation)
         {
-            T result = default;
+            var result = new ConcurentResult();
             var saved = false;
-
-            // for concurrent issues checks
-            // _dbContext.Database.ExecuteSqlRaw("UPDATE Accounts SET Balance = 600");
 
             while (!saved)
             {
@@ -85,7 +75,7 @@ namespace ShireBank.Repos
                 {
                     try
                     {
-                        result = operation();
+                        operation();
 
                         transaction.Commit();
                         saved = true;
@@ -104,12 +94,21 @@ namespace ShireBank.Repos
                                     var proposedValue = (float)proposedValues[property];
                                     var databaseValue = (float)databaseValues[property];
                                     var originalValue = (float)entry.OriginalValues[property];
-                                    var debitLimit = (float)proposedValues[nameof(Account.Balance)];
+                                    var debitLimit = -(float)proposedValues[nameof(Account.DebtLimit)];
 
-                                    var calculatedNewBalance = proposedValue - originalValue + databaseValue;
+                                    var balanceChange = proposedValue - originalValue;
+                                    var calculatedNewBalance = balanceChange + databaseValue;
 
-                                    proposedValues[property] = calculatedNewBalance > -debitLimit ?
-                                        calculatedNewBalance : -debitLimit;
+                                    if (calculatedNewBalance > debitLimit)
+                                    {
+                                        proposedValues[property] = calculatedNewBalance;
+                                        result.BalanceChange = balanceChange;
+                                    }
+                                    else
+                                    {
+                                        proposedValues[property] = debitLimit;
+                                        result.BalanceChange = calculatedNewBalance - debitLimit;
+                                    }
                                 }                                
                             }
                             
@@ -135,6 +134,11 @@ namespace ShireBank.Repos
             };
 
             _dbContext.AccountHistories.Add(history);
+        }
+
+        private struct ConcurentResult
+        {
+            public float? BalanceChange { get; set; }
         }
     }
 }
