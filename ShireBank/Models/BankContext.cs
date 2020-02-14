@@ -15,17 +15,5 @@ namespace ShireBank.Models
         public BankContext(DbContextOptions<BankContext> options) : base(options)
         {
         }
-
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<AccountHistory>()
-        //        .HasOne<Account>()
-        //        .WithMany()
-        //        .HasForeignKey(a => a.AccountId)
-        //        .IsRequired()
-        //        .OnDelete(DeleteBehavior.Cascade);
-
-        //    base.OnModelCreating(modelBuilder);
-        //}
     }
 }

@@ -1,22 +1,23 @@
-﻿
+﻿using System.ServiceModel;
+
 namespace SharedInterface
 {
-    [System.ServiceModel.ServiceContract]
+    [ServiceContract]
     public interface ICustomerInterface
     {
-        [System.ServiceModel.OperationContract]
+        [OperationContract]
         uint? OpenAccount(string firstName, string lastName, float debtLimit);
 
-        [System.ServiceModel.OperationContract]
+        [OperationContract]
         float Withdraw(uint account, float amount);
 
-        [System.ServiceModel.OperationContract]
+        [OperationContract]
         void Deposit(uint account, float amount);
 
-        [System.ServiceModel.OperationContract]
+        [OperationContract]
         string GetHistory(uint account);
 
-        [System.ServiceModel.OperationContract]
+        [OperationContract]
         bool CloseAccount(uint account);
     }
 }

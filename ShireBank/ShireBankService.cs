@@ -12,7 +12,7 @@ namespace ShireBank
 {
     [ServiceBehavior(
         ConcurrencyMode = ConcurrencyMode.Multiple,
-        InstanceContextMode = InstanceContextMode.PerSession,
+        InstanceContextMode = InstanceContextMode.PerSession, // TODO find out about other options
         IncludeExceptionDetailInFaults = true
     )]
     public class ShireBankService : ICustomerInterface

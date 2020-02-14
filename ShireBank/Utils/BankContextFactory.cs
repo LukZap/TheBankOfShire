@@ -15,7 +15,8 @@ namespace ShireBank.Utils
         public BankContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<BankContext>();
-            builder.UseSqlite(@"Filename=C:\Users\lukasz.zaparucha\Documents\TheBankOfShire\ShireBank\ShireBank.db"); // take from config
+            // TODO find way to use config value here
+            builder.UseSqlite(@"Filename=C:\Users\lukasz.zaparucha\Documents\TheBankOfShire\ShireBank\ShireBank.db"); 
 
             return new BankContext(builder.Options);
         }

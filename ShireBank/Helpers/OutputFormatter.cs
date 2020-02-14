@@ -9,6 +9,7 @@ namespace ShireBank.Helpers
 {
     public class OutputFormatter : IOutputFormatter
     {
+        // TODO clean that a little later
         public string AccountHistoriesToHumanReadable(IEnumerable<AccountHistory> historiesList)
         {
             StringBuilder sb = new StringBuilder();
