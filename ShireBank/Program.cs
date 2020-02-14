@@ -22,6 +22,9 @@ namespace ShireBank
             {
                 var serviceHost = new ServiceHost(typeof(ShireBankService), new Uri(Constants.BankBaseAddress));
                 serviceHost.AddServiceEndpoint(typeof(ICustomerInterface), new BasicHttpBinding(), Constants.ServiceName);
+                serviceHost.AddServiceEndpoint(typeof(IInspectorInterface), new BasicHttpBinding(),
+                    Constants.InspectorServiceEndpoint);
+
                 serviceHost.AddDependencyInjectionBehavior<ShireBankService>(scope);
                 serviceHost.Open();
                 Console.ReadKey();

@@ -26,10 +26,10 @@ namespace ShireBank
 
         private static void RegisterDependencies(ContainerBuilder builder)
         {
-            builder.RegisterType<BankContext>().WithParameter("options", BankContextOptionsFactory.Build()).InstancePerDependency(); // TODO not sure
-            builder.RegisterType<ShireBankService>().AsSelf().InstancePerDependency(); // TODO not sure
-            builder.RegisterType<ShireBankService>().As<ICustomerInterface>().InstancePerDependency(); // TODO not sure
-            builder.RegisterType<AccountRepository>().As<IAccountRepository>().InstancePerDependency(); // TODO not sure
+            builder.RegisterType<BankContext>().WithParameter("options", BankContextOptionsFactory.Build());
+            builder.RegisterType<ShireBankService>().AsSelf();
+            builder.RegisterType<ShireBankService>().As<ICustomerInterface>();
+            builder.RegisterType<AccountRepository>().As<IAccountRepository>();
             builder.RegisterType<OutputFormatter>().As<IOutputFormatter>().SingleInstance();
         }
     }

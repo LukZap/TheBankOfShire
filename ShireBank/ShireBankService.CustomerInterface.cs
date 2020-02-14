@@ -7,6 +7,8 @@ namespace ShireBank
     {
         public uint? OpenAccount(string firstName, string lastName, float debtLimit)
         {
+            _manualResetEvent.WaitOne();
+
             var accountExists = _accountRepository
                 .GetWhere(x => x.FirstName == firstName && x.LastName == lastName)
                 .Any();
@@ -27,6 +29,8 @@ namespace ShireBank
 
         public float Withdraw(uint account, float amount)
         {
+            _manualResetEvent.WaitOne();
+
             var dbAccount = _accountRepository.Get(account);
 
             var balanceBeforeWithdraw = dbAccount.Balance;
@@ -47,6 +51,8 @@ namespace ShireBank
 
         public void Deposit(uint account, float amount)
         {
+            _manualResetEvent.WaitOne();
+
             var dbAccount = _accountRepository.Get(account);
 
             dbAccount.Balance += amount;
@@ -56,12 +62,16 @@ namespace ShireBank
 
         public string GetHistory(uint account)
         {
+            _manualResetEvent.WaitOne();
+
             var historiesList = _accountRepository.GetHistory(account);
             return _outputFormatter.AccountHistoriesToHumanReadable(historiesList);
         }
 
         public bool CloseAccount(uint account)
         {
+            _manualResetEvent.WaitOne();
+
             var dbAccount = _accountRepository.Get(account);
             if (dbAccount.Balance != 0.0f)
                 return false;

@@ -46,7 +46,7 @@ namespace CustomerTest
                     lock (historyPrintLock)
                     {
                         Console.WriteLine("=== Customer 1 ===");
-                        Console.Write(customer.GetHistory(accountId.Value));
+                        Console.WriteLine(customer.GetHistory(accountId.Value));
                     }
 
                     if (!customer.CloseAccount(accountId.Value))
@@ -99,7 +99,7 @@ namespace CustomerTest
                     lock (historyPrintLock)
                     {
                         Console.WriteLine("=== Customer 2 ===");
-                        Console.Write(customer.GetHistory(accountId.Value));
+                        Console.WriteLine(customer.GetHistory(accountId.Value));
                     }
 
                     if (!customer.CloseAccount(accountId.Value))
@@ -160,7 +160,7 @@ namespace CustomerTest
                     lock (historyPrintLock)
                     {
                         Console.WriteLine("=== Customer 3 ===");
-                        Console.Write(customer.GetHistory(accountId.Value));
+                        Console.WriteLine(customer.GetHistory(accountId.Value));
                     }
 
                     if (!customer.CloseAccount(accountId.Value))

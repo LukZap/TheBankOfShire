@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
+using System.Threading;
 
 namespace ShireBank
 {
@@ -19,11 +20,13 @@ namespace ShireBank
     {
         private readonly IAccountRepository _accountRepository;
         private readonly IOutputFormatter _outputFormatter;
+        private readonly EventWaitHandle _manualResetEvent;
 
         public ShireBankService(IAccountRepository accountRepository, IOutputFormatter outputFormatter)
         {
             _accountRepository = accountRepository;
             _outputFormatter = outputFormatter;
+            _manualResetEvent = new EventWaitHandle(true, EventResetMode.ManualReset, "InspectorEvent");
         }
     }
 }
