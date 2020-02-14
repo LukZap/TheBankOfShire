@@ -194,6 +194,8 @@
     <Compile Include="Repos\IAccountRepository.cs" />
     <Compile Include="ShireBankService.cs" />
     <Compile Include="Models\BankContext.cs" />
+    <Compile Include="ShireBankService.CustomerInterface.cs" />
+    <Compile Include="ShireBankService.InspectorInterface.cs" />
     <Compile Include="Utils\BankContextOptionsFactory.cs" />
     <Compile Include="Utils\BankContextFactory.cs" />
   </ItemGroup>

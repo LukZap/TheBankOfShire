@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SharedInterface;
+using System;
+using System.ServiceModel;
 using System.Threading;
 
 namespace CustomerTest
@@ -7,9 +9,9 @@ namespace CustomerTest
     {
         private static void Main(string[] args)
         {
-            using (var channelFactory = new System.ServiceModel.ChannelFactory<SharedInterface.ICustomerInterface>(
-                new System.ServiceModel.BasicHttpBinding { SendTimeout = TimeSpan.FromMinutes(1) },
-                new System.ServiceModel.EndpointAddress(SharedInterface.Constants.FullBankAddress)))
+            using (var channelFactory = new ChannelFactory<ICustomerInterface>(
+                new BasicHttpBinding { SendTimeout = TimeSpan.FromMinutes(1) },
+                new EndpointAddress(Constants.FullBankAddress)))
             {
                 ManualResetEvent[] endOfWorkEvents =
                     {new ManualResetEvent(false), new ManualResetEvent(false), new ManualResetEvent(false)};
