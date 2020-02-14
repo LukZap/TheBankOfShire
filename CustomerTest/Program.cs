@@ -164,7 +164,6 @@ namespace CustomerTest
                     if (!customer.CloseAccount(accountId.Value))
                     {
                         throw new Exception("Failed to close account");
-                        ;
                     }
 
                     endOfWorkEvents[2].Set();

@@ -58,9 +58,12 @@ namespace ShireBank
             else
                 dbAccount.Balance = balanceAfterWithdraw;
 
-            var retreivedAmount = _accountRepository.Update(dbAccount);
+            var updateResult = _accountRepository.Update(dbAccount);
 
-            return retreivedAmount ?? balanceBeforeWithdraw - dbAccount.Balance;
+            if (updateResult.AccountWasDeleted)
+                return 0.0f;
+
+            return updateResult.BalanceChange ?? balanceBeforeWithdraw - dbAccount.Balance;
         }
 
         public void Deposit(uint account, float amount)
@@ -84,7 +87,10 @@ namespace ShireBank
             if (dbAccount.Balance != 0.0f)
                 return false;
 
-            _accountRepository.Delete(dbAccount);
+            var deleteResult = _accountRepository.Delete(dbAccount);
+            if(deleteResult.AccountBalanceWasUpdated)
+                return false;
+
             return true;
         }
     }

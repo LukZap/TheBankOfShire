@@ -190,6 +190,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repos\AccountRepository.cs" />
+    <Compile Include="Repos\ConcurentResult.cs" />
     <Compile Include="Repos\IAccountRepository.cs" />
     <Compile Include="ShireBankService.cs" />
     <Compile Include="Models\BankContext.cs" />

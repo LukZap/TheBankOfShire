@@ -43,22 +43,20 @@ namespace ShireBank.Repos
             _dbContext.SaveChanges();
         }
 
-        public float? Update(Account account)
+        public ConcurentResult Update(Account account)
         { 
-            var result = HandleConcurrentOperation(() => {
+            return HandleConcurrentOperation(() => {
                 _dbContext.Entry(account).State = EntityState.Modified;
                 _dbContext.SaveChanges();
 
                 AddHistoryEntry(account);
                 _dbContext.SaveChanges();
             });
-
-            return -result.BalanceChange;
         }
 
-        public void Delete(Account account)
+        public ConcurentResult Delete(Account account)
         {
-            HandleConcurrentOperation(() => {
+            return HandleConcurrentOperation(() => {
                 _dbContext.Accounts.Remove(account);
                 _dbContext.SaveChanges();
             });
@@ -86,6 +84,18 @@ namespace ShireBank.Repos
                         {
                             var proposedValues = entry.CurrentValues;
                             var databaseValues = entry.GetDatabaseValues();
+
+                            if (databaseValues == null)
+                            {
+                                result.AccountWasDeleted = true;
+                                return result;
+                            }
+
+                            if (entry.State == EntityState.Deleted)
+                            {
+                                result.AccountBalanceWasUpdated = true;
+                                return result;
+                            }
 
                             foreach (var property in proposedValues.Properties)
                             {
@@ -134,11 +144,6 @@ namespace ShireBank.Repos
             };
 
             _dbContext.AccountHistories.Add(history);
-        }
-
-        private struct ConcurentResult
-        {
-            public float? BalanceChange { get; set; }
         }
     }
 }
